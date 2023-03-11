@@ -71,10 +71,10 @@ class Orderbook():
     
     def _calculate_high_boundary_volume(self):
         sell = self.sell_orders.copy()
-        sell = sell.assign(sell_volume=sell["Quantity"] * sell["Rate"])
+        sell = sell.assign(volume=sell["Quantity"] * sell["Rate"])
         sell_limit = sell.Rate.min() * (1 + self.perc_depth/100)
         self.high_boundary = round(sell_limit,6)
-        sell_vol = sell[sell.Rate < sell_limit]['sell_volume'].sum()
+        sell_vol = sell[sell.Rate < sell_limit]['volume'].sum()
         self.high_boundary_volume = round(sell_vol,0)
 
     def _set_buy_orders_df(self):
@@ -82,8 +82,33 @@ class Orderbook():
     
     def _calculate_low_boundary_volume(self):
         buy = self.buy_orders.copy()
-        buy = buy.assign(buy_volume=buy["Quantity"] * buy["Rate"])
+        buy = buy.assign(volume=buy["Quantity"] * buy["Rate"])
         low_boundary = buy.Rate.max() * (1 - self.perc_depth/100)
         self.low_boundary = round(low_boundary,6)
-        buy_volume = buy[buy.Rate > low_boundary]['buy_volume'].sum()
+        buy_volume = buy[buy.Rate > low_boundary]['volume'].sum()
         self.low_boundary_volume = round(buy_volume,0)
+
+    def calculate_cumsum_df(self):
+        self.fetch_data()
+        if self.result_json:
+            self._set_sell_orders_df()
+            self._set_buy_orders_df()
+
+            buy_df = self.buy_orders.copy()
+            buy_df = buy_df.assign(side="buy")
+            buy_df = buy_df[buy_df.Rate > buy_df.Rate.max()*0.5]
+            buy_df = buy_df.sort_values(by=["Rate"], ascending=False)
+
+            sell_df = self.sell_orders.copy()
+            sell_df = sell_df.assign(side="sell")
+            sell_df = sell_df[sell_df.Rate < sell_df.Rate.min()*1.5]
+            sell_df = sell_df.sort_values(by=["Rate"], ascending=True)
+
+            cumsum_df = pd.concat([buy_df ,sell_df ],axis=0,ignore_index=True)
+            cumsum_df = cumsum_df.assign(volume=cumsum_df["Rate"]*cumsum_df["Quantity"])
+            c_asks = cumsum_df[cumsum_df["side"]=='buy']['volume'].cumsum()
+            c_bids = cumsum_df[cumsum_df["side"]=='sell']['volume'].cumsum()
+            cumulated = pd.concat([c_asks, c_bids])
+            cumsum_df.loc[:, 'sum_USD'] = cumulated
+
+            return cumsum_df

@@ -3,3 +3,4 @@ flask
 tenacity
 requests
 gunicorn
+plotly

@@ -29,3 +29,4 @@ class MEXCOrderbook(Orderbook):
 if __name__ == "__main__":
     mexc = MEXCOrderbook("KAS/USDT")
     print(mexc.get_depth_df())
+    print(mexc.calculate_cumsum_df())
