@@ -30,7 +30,9 @@ class Orderbook():
         list_df.append(self.get_depth(20))
         list_df.append(self.get_depth(25))
         list_df.append(self.get_depth(30))
-        return pd.DataFrame(list_df)
+        result_df = pd.DataFrame(list_df)
+        result_df = result_df.assign(buy_sell_ratio = result_df["buy_vol"] / result_df["sell_vol"])
+        return result_df
 
 
     def get_depth(self, perc_depth):
