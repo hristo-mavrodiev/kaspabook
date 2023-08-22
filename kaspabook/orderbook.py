@@ -98,12 +98,12 @@ class Orderbook():
 
             buy_df = self.buy_orders.copy()
             buy_df = buy_df.assign(side="buy")
-            buy_df = buy_df[buy_df.Rate > buy_df.Rate.max()*0.5]
+            buy_df = buy_df[buy_df.Rate > buy_df.Rate.max()*0.3]
             buy_df = buy_df.sort_values(by=["Rate"], ascending=False)
 
             sell_df = self.sell_orders.copy()
             sell_df = sell_df.assign(side="sell")
-            sell_df = sell_df[sell_df.Rate < sell_df.Rate.min()*1.5]
+            sell_df = sell_df[sell_df.Rate < sell_df.Rate.min()*1.7]
             sell_df = sell_df.sort_values(by=["Rate"], ascending=True)
 
             cumsum_df = pd.concat([buy_df ,sell_df ],axis=0,ignore_index=True)

@@ -14,16 +14,16 @@ def depth_chart():
     fig_mexc = create_depth_fig(mexc_df, "MEXC")
     graphJSON_mexc = json.dumps(fig_mexc, cls=plotly.utils.PlotlyJSONEncoder)
 
-    txbit_df = TxbitOrderbook("KAS/USDT").calculate_cumsum_df()
-    fig_txbit = create_depth_fig(txbit_df, "TXBIT")
-    graphJSON_mtxbit = json.dumps(fig_txbit, cls=plotly.utils.PlotlyJSONEncoder)
-    return render_template('orderbooks.html', graphJSON_mexc=graphJSON_mexc, graphJSON_txbit= graphJSON_mtxbit )
+    # txbit_df = TxbitOrderbook("RXD/USDT").calculate_cumsum_df()
+    # fig_txbit = create_depth_fig(txbit_df, "TXBIT")
+    # graphJSON_mtxbit = json.dumps(fig_txbit, cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('orderbooks.html', graphJSON_mexc=graphJSON_mexc, graphJSON_txbit= graphJSON_mexc )
 
 @app.route('/data')
 def get_orderbook():
     mexc_df = MEXCOrderbook("KAS/USDT").get_depth_df()
-    txbit_df = TxbitOrderbook("KAS/USDT").get_depth_df()
-    merged_orderbook = pd.concat([mexc_df,txbit_df])
+    #txbit_df = TxbitOrderbook("KAS/USDT").get_depth_df()
+    merged_orderbook = pd.concat([mexc_df])
     return merged_orderbook.to_html(header="true", table_id="table")
 
 if __name__ == '__main__':

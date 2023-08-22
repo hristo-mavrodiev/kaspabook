@@ -1,0 +1,2 @@
+CONN_STR = "DefaultEndpointsProtocol=https;AccountName=kaspabook;AccountKey=U1J0KO+e2vk13CiwUp2cxU/PHCiWIkU1fJfNzAytP+LOdqyBCiKRPsq1CCCoN04VYgann5wOc95Z+AStUSoq6w==;EndpointSuffix=core.windows.net"
+KEY = "U1J0KO+e2vk13CiwUp2cxU/PHCiWIkU1fJfNzAytP+LOdqyBCiKRPsq1CCCoN04VYgann5wOc95Z+AStUSoq6w=="
